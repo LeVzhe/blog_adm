@@ -9,7 +9,7 @@
             "{{ post.title }}" was succesfully sent
             to {{ form.cleaned_data.to }}.
         </p>
-        <a href="{% url "blog:post_detail" post.publish.year post.publish.month post.publish.day post.slug %}">Back</a>
+        <a href="{{ post.get_absolute_url }}">Back to the post</a>
     {% else %}
         <h1>Share "{{ post.title }}" by e-mail</h1>
         <form method="post">
