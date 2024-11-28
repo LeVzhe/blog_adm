@@ -5,8 +5,9 @@ from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView
 from django.conf import settings
 
-from .models import Post
-from .forms import EmailPostForm
+from .models import Post, Comment
+from .forms import EmailPostForm, CommentForm
+from django.views.decorators.http import require_POST
 
 
 def post_share(request, post_id):
@@ -73,3 +74,20 @@ def post_detail(request, year, month, day, post):
     )
 
     return render(request, "blog/post/detail.html", {"post": post})
+
+
+@require_POST
+def post_comment(request, post_id):
+    post = get_object_or_404(Post, id=post_id, status=Post.Status.PUBLISHED)
+    comment = None
+    form = CommentForm(data=request.POST)
+    if form.is_valid():
+        comment = form.save(commit=False)
+        comment.post = post
+        comment.save()
+    content = {
+        "post": post,
+        "form": form,
+        "comment": comment,
+    }
+    return render(request, "blog/post/comment.html", content)
