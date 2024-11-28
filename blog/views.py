@@ -72,8 +72,15 @@ def post_detail(request, year, month, day, post):
         publish__day=day,
         slug=post,
     )
+    comments = post.comments.filter(active=True)
+    form = CommentForm()
+    content = {
+        "post": post,
+        "comments": comments,
+        "form": form,
+    }
 
-    return render(request, "blog/post/detail.html", {"post": post})
+    return render(request, "blog/post/detail.html", content)
 
 
 @require_POST
