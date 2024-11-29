@@ -1,14 +1,12 @@
-from django.core.mail import send_mail
-from django.shortcuts import render, get_object_or_404
-
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-
 # from django.views.generic import ListView
 from django.conf import settings
-
-from .models import Post, Comment
-from .forms import EmailPostForm, CommentForm
+from django.core.mail import send_mail
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.shortcuts import get_object_or_404, render
 from django.views.decorators.http import require_POST
+
+from .forms import CommentForm, EmailPostForm
+from .models import Comment, Post
 
 
 def post_share(request, post_id):
