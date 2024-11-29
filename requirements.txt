@@ -2,4 +2,5 @@ asgiref==3.8.1
 Django==5.1
 django-environ==0.11.2
 django-taggit==6.1.0
+isort==5.13.2
 sqlparse==0.5.2
