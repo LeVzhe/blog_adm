@@ -1,4 +1,5 @@
 import os
+
 import environ
 
 env = environ.Env(DEBUG=(bool, False))
@@ -29,6 +30,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "blog.apps.BlogConfig",
+    "taggit",
 ]
 
 MIDDLEWARE = [
