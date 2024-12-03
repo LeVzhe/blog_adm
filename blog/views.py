@@ -1,5 +1,4 @@
 # from django.views.generic import ListView
-from re import search
 from django.conf import settings
 from django.contrib.postgres.search import SearchVector
 from django.core.mail import send_mail
