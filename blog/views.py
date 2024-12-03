@@ -1,13 +1,15 @@
 # from django.views.generic import ListView
 from django.conf import settings
-from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
+
+# from django.contrib.postgres.search import (SearchQuery, SearchRank,
+#                                             SearchVector, )
+from django.contrib.postgres.search import TrigramSimilarity
 from django.core.mail import send_mail
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Count
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.http import require_POST
 from taggit.models import Tag
-from django.contrib.postgres.search import TrigramSimilarity
 
 from .forms import CommentForm, EmailPostForm, SearchForm
 from .models import Post
