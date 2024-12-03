@@ -1,13 +1,15 @@
 # from django.views.generic import ListView
 from django.conf import settings
+from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 from django.core.mail import send_mail
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db.models import Count
 from django.shortcuts import get_object_or_404, render
 from django.views.decorators.http import require_POST
 from taggit.models import Tag
+from django.contrib.postgres.search import TrigramSimilarity
 
-from .forms import CommentForm, EmailPostForm
+from .forms import CommentForm, EmailPostForm, SearchForm
 from .models import Post
 
 
@@ -111,3 +113,43 @@ def post_comment(request, post_id):
         "comment": comment,
     }
     return render(request, "blog/post/comment.html", content)
+
+
+def post_search(request):
+    form = SearchForm()
+    query = None
+    results = []
+
+    if "query" in request.GET:
+        form = SearchForm(request.GET)
+        if form.is_valid():
+            query = form.cleaned_data["query"]
+
+            #### Блок кода показательный. Для обычного поиска с приоритетом ####
+            # search_vector = SearchVector("title", weight="A") + SearchVector(
+            #     "body", weight="B"
+            # )
+            # search_query = SearchQuery(query)
+            # results = (
+            #     Post.published.annotate(
+            #         search=search_vector, rank=SearchRank(search_vector, search_query)
+            #     )
+            #     .filter(rank__gte=0.3)
+            #     .order_by("-rank")
+            # )
+            #####
+
+            #### Применение триграммного поиска ####
+            results = (
+                Post.published.annotate(
+                    similarity=TrigramSimilarity("title", query),
+                )
+                .filter(similarity__gt=0.1)
+                .order_by("-similarity")
+            )
+
+    return render(
+        request,
+        "blog/post/search.html",
+        {"form": form, "query": query, "results": results},
+    )
